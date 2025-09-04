@@ -6,7 +6,11 @@
       "Bash(pnpm build:*)",
       "Bash(sed:*)",
       "Bash(pnpm typecheck:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(pnpm dev:*)",
+      "Bash(pnpm docs:dev:*)",
+      "Bash(pnpm:*)",
+      "Bash(node:*)"
     ],
     "deny": [],
     "ask": []
