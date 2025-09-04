@@ -1,0 +1,67 @@
+{
+  "name": "zodown",
+  "version": "0.0.1",
+  "description": "Write Zod v4 schemas, run them in Zod v3 environments",
+  "author": "Justin Schroeder",
+  "license": "MIT",
+  "homepage": "https://github.com/justinschroeder/zodown",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/justinschroeder/zodown.git"
+  },
+  "bugs": {
+    "url": "https://github.com/justinschroeder/zodown/issues"
+  },
+  "keywords": [
+    "zod",
+    "schema",
+    "validation",
+    "typescript",
+    "converter",
+    "compatibility"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "lint": "prettier --check .",
+    "format": "prettier --write .",
+    "typecheck": "tsc --noEmit",
+    "release": "bumpp",
+    "prepublishOnly": "pnpm run build",
+    "docs:dev": "pnpm --filter docs dev",
+    "docs:build": "pnpm --filter docs build",
+    "docs:preview": "pnpm --filter docs preview"
+  },
+  "dependencies": {
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "@vitest/coverage-v8": "^1.2.1",
+    "bumpp": "^9.2.1",
+    "prettier": "^3.2.4",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.1"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "packageManager": "pnpm@10.14.0+sha512.ad27a79641b49c3e481a16a805baa71817a04bbe06a38d17e60e2eaee83f6a146c6a688125f5792e48dd5ba30e7da52a5cda4c3992b9ccf333f9ce223af84748"
+}

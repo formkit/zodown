@@ -1,0 +1,42 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build outputs
+dist
+*.tsbuildinfo
+coverage
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.sublime-workspace
+*.sublime-project
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Documentation build
+docs/dist
+docs/.vitepress/dist
+docs/.vitepress/cache
+
+# Testing
+*.lcov
+.nyc_output

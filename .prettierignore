@@ -1,0 +1,11 @@
+dist
+node_modules
+coverage
+.nuxt
+.output
+*.min.js
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+.gitignore
+LICENSE
