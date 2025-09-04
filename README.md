@@ -2,9 +2,9 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/zodown"><img src="https://img.shields.io/npm/v/zodown.svg?style=flat-square" alt="npm version"></a>
-  <a href="https://github.com/justinschroeder/zodown/actions"><img src="https://img.shields.io/github/actions/workflow/status/justinschroeder/zodown/ci.yml?branch=main&style=flat-square" alt="build status"></a>
+  <a href="https://github.com/formkit/zodown/actions"><img src="https://img.shields.io/github/actions/workflow/status/formkit/zodown/ci.yml?branch=main&style=flat-square" alt="build status"></a>
   <a href="https://www.npmjs.com/package/zodown"><img src="https://img.shields.io/npm/dm/zodown.svg?style=flat-square" alt="npm downloads"></a>
-  <a href="https://github.com/justinschroeder/zodown/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/zodown.svg?style=flat-square" alt="license"></a>
+  <a href="https://github.com/formkit/zodown/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/zodown.svg?style=flat-square" alt="license"></a>
 </p>
 
 > Write Zod v4 schemas, run them in Zod v3 environments
