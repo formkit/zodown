@@ -75,6 +75,7 @@ describe('New Feature', () => {
 ## Commit Messages
 
 Follow conventional commits:
+
 - `feat:` for new features
 - `fix:` for bug fixes
 - `docs:` for documentation

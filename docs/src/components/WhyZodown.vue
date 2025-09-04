@@ -1,7 +1,7 @@
 <template>
   <section>
     <h2>WHY ZODOWN?</h2>
-    
+
     <div class="grid">
       <div class="card">
         <h3>📦 THE PROBLEM</h3>
@@ -10,12 +10,12 @@
           You're forced to choose between modern schemas and library compatibility.
         </p>
       </div>
-      
+
       <div class="card">
         <h3>✨ THE SOLUTION</h3>
         <p>
-          <code>zodown</code> converts your Zod v4 schemas to v3 at runtime.
-          Write modern code, maintain compatibility, ship features.
+          <code>zodown</code> converts your Zod v4 schemas to v3 at runtime. Write modern code,
+          maintain compatibility, ship features.
         </p>
       </div>
     </div>
@@ -23,7 +23,7 @@
     <div class="terminal">
       <div class="terminal-content">
         <div class="prompt">npm ls zod</div>
-        <pre style="background: var(--bg); border: none; color: var(--fg); padding: 0;">
+        <pre style="background: var(--bg); border: none; color: var(--fg); padding: 0">
 ├─ @modelcontextprotocol/sdk@1.0.0
 │  └─ zod@3.22.4 <span style="opacity: 0.5">// Requires v3!</span>
 └─ my-app@1.0.0
@@ -32,9 +32,9 @@
       </div>
     </div>
 
-    <div class="border" style="margin-top: 2rem;">
+    <div class="border" style="margin-top: 2rem">
       <h3>REAL WORLD EXAMPLE</h3>
-      <pre style="background: var(--bg); border: none; padding: 0; color: var(--fg);">
+      <pre style="background: var(--bg); border: none; padding: 0; color: var(--fg)">
 <span style="opacity: 0.7">// zodown includes Zod v4 - no separate install!</span>
 import { z, zodown } from 'zodown'
 

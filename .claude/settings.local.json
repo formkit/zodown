@@ -6,7 +6,8 @@
       "Bash(pnpm build:*)",
       "Bash(sed:*)",
       "Bash(pnpm typecheck:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "WebFetch(domain:zod.dev)"
     ],
     "deny": [],
     "ask": []

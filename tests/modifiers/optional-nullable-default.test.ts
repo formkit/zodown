@@ -60,10 +60,7 @@ describe('Optional, Nullable, and Default Modifiers', () => {
   })
 
   it('handles optional with refinements', () => {
-    const v4Schema = zod4
-      .string()
-      .min(3)
-      .optional()
+    const v4Schema = zod4.string().min(3).optional()
 
     const v3Schema = zodown(v4Schema)
 
@@ -87,13 +84,15 @@ describe('Optional, Nullable, and Default Modifiers', () => {
   it('handles complex default values', () => {
     const v4Schema = zod4.object({
       name: zod4.string(),
-      settings: zod4.object({
-        theme: zod4.string().default('light'),
-        notifications: zod4.boolean().default(true),
-      }).default({
-        theme: 'dark',
-        notifications: false,
-      }),
+      settings: zod4
+        .object({
+          theme: zod4.string().default('light'),
+          notifications: zod4.boolean().default(true),
+        })
+        .default({
+          theme: 'dark',
+          notifications: false,
+        }),
     })
 
     const v3Schema = zodown(v4Schema)

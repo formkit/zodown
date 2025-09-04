@@ -46,17 +46,31 @@ describe('Object Types', () => {
       required: zod4.string(),
       optional: zod4.number().optional(),
       nullable: zod4.boolean().nullable(),
+      nullableOptional: zod4.string().nullable().optional(),
     })
     const v3Schema = zodown(v4Schema)
 
-    expect(v3Schema.parse({ required: 'test' })).toEqual({ required: 'test' })
-    expect(v3Schema.parse({ required: 'test', optional: 42 })).toEqual({
+    expect(v3Schema.parse({ required: 'test', nullable: true })).toEqual({
+      required: 'test',
+      nullable: true,
+    })
+    expect(v3Schema.parse({ required: 'test', optional: 42, nullable: false })).toEqual({
       required: 'test',
       optional: 42,
+      nullable: false,
     })
     expect(v3Schema.parse({ required: 'test', nullable: null })).toEqual({
       required: 'test',
       nullable: null,
+    })
+    expect(v3Schema.parse({ required: 'test', nullable: true, nullableOptional: null })).toEqual({
+      required: 'test',
+      nullable: true,
+      nullableOptional: null,
+    })
+    expect(v3Schema.parse({ required: 'test', nullable: false })).toEqual({
+      required: 'test',
+      nullable: false,
     })
   })
 

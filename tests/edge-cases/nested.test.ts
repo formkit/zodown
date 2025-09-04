@@ -47,15 +47,10 @@ describe('Deeply Nested Schemas', () => {
     const v3Schema = zodown(v4Schema)
     const testData = [
       {
-        children: [
-          { items: ['a', 'b'] },
-          { items: ['c', 'd'] },
-        ],
+        children: [{ items: ['a', 'b'] }, { items: ['c', 'd'] }],
       },
       {
-        children: [
-          { items: ['e', 'f'] },
-        ],
+        children: [{ items: ['e', 'f'] }],
       },
     ]
 
@@ -122,11 +117,7 @@ describe('Deeply Nested Schemas', () => {
 
   it('handles nested records and tuples', () => {
     const v4Schema = zod4.record(
-      zod4.tuple([
-        zod4.string(),
-        zod4.record(zod4.number()),
-        zod4.array(zod4.boolean()),
-      ])
+      zod4.tuple([zod4.string(), zod4.record(zod4.number()), zod4.array(zod4.boolean())])
     )
 
     const v3Schema = zodown(v4Schema)

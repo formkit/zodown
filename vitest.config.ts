@@ -6,12 +6,7 @@ export default defineConfig({
     environment: 'node',
     coverage: {
       reporter: ['text', 'json', 'html'],
-      exclude: [
-        'node_modules/',
-        'dist/',
-        'docs/',
-        '*.config.ts',
-      ],
+      exclude: ['node_modules/', 'dist/', 'docs/', '*.config.ts'],
     },
   },
 })

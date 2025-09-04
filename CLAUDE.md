@@ -9,6 +9,7 @@ This guide helps AI assistants understand and work with the zodown codebase effe
 ## Core Architecture
 
 ### Main Function: `zodown()`
+
 - Location: `src/zodown.ts`
 - Purpose: Converts Zod v4 schemas to Zod v3 schemas at runtime
 - Key features:
@@ -17,6 +18,7 @@ This guide helps AI assistants understand and work with the zodown codebase effe
   - Maintains full type safety
 
 ### Type System
+
 - `DowngradeType<T>`: Maps v4 types to v3 equivalents
 - `InferDowngraded<T>`: Helper for type inference
 - All type mappings preserve validation logic
@@ -24,6 +26,7 @@ This guide helps AI assistants understand and work with the zodown codebase effe
 ## Development Workflow
 
 ### Running Tests
+
 ```bash
 pnpm test          # Run tests in watch mode
 pnpm test:run      # Run tests once
@@ -31,12 +34,14 @@ pnpm test:coverage # Generate coverage report
 ```
 
 ### Building
+
 ```bash
 pnpm build    # Build for production
 pnpm dev      # Build in watch mode
 ```
 
 ### Code Quality
+
 ```bash
 pnpm lint      # Check formatting
 pnpm format    # Fix formatting
@@ -70,6 +75,7 @@ When adding support for a new Zod type:
 ## Documentation Site
 
 The documentation site is built with Vue 3 and Vite:
+
 - Location: `docs/`
 - Style: 1-bit retro terminal aesthetic
 - Run locally: `pnpm docs:dev`
@@ -88,17 +94,19 @@ The documentation site is built with Vue 3 and Vite:
 ## Common Tasks
 
 ### Adding a New Validation
+
 ```typescript
 // In zodown.ts, find the appropriate type handler
 if (s instanceof zod4.ZodString) {
   // Add new validation handling here
-  if (check.kind === "newValidation") {
+  if (check.kind === 'newValidation') {
     result = result.newValidation(check.value, check.message)
   }
 }
 ```
 
 ### Debugging Type Issues
+
 ```typescript
 // Use console.warn for unknown types
 console.warn(`Unknown Zod v4 type encountered: ${typeName}`)
@@ -115,11 +123,13 @@ console.warn(`Unknown Zod v4 type encountered: ${typeName}`)
 ## Troubleshooting
 
 ### Common Issues
+
 - **Circular References**: Handled via WeakMap caching
 - **Unknown Types**: Falls back to `z.unknown()` with warning
 - **Type Inference**: Use `InferDowngraded<T>` helper
 
 ### Testing New Features
+
 1. Add unit tests for the specific type/feature
 2. Add integration tests with complex schemas
 3. Test type inference in TypeScript
@@ -136,6 +146,7 @@ console.warn(`Unknown Zod v4 type encountered: ${typeName}`)
 ## Contributing
 
 When contributing:
+
 1. Follow existing code patterns
 2. Add tests for new features
 3. Update this guide if needed

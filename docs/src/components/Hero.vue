@@ -14,18 +14,25 @@
 ║                                                       ║
 ╚═══════════════════════════════════════════════════════╝
     </pre>
-    
+
     <div class="border dashed">
-      <p class="typewriter" style="text-align: center; font-size: 1.1rem;">
+      <p class="typewriter" style="text-align: center; font-size: 1.1rem">
         Convert Zod v4 schemas to v3 at runtime<span class="blink">_</span>
       </p>
     </div>
 
-    <div style="text-align: center; margin: 2rem 0; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">
+    <div
+      style="
+        text-align: center;
+        margin: 2rem 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+      "
+    >
       <GitHubButton />
-      <button @click="scrollToInstall">
-        GET STARTED →
-      </button>
+      <button @click="scrollToInstall">GET STARTED →</button>
     </div>
   </header>
 </template>

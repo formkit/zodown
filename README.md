@@ -155,6 +155,46 @@ const Schema = z.object({ name: z.string() })
 type User = InferDowngraded<typeof Schema> // { name: string }
 ```
 
+## Limitations
+
+While `zodown` handles most Zod v4 features, there are some limitations due to architectural differences between v3 and v4:
+
+### Features That Cannot Be Converted
+
+1. **`.refine()` and `.superRefine()` on base types** - In Zod v4, these are compiled into internal check functions that cannot be reverse-engineered. The base schema is returned without the refinement.
+
+2. **Branded types** - Zod v4 implements branding as a compile-time TypeScript feature with no runtime representation, while v3 expects runtime `ZodBranded` instances. Branded schemas are returned as their base type.
+
+3. **Variable-length tuples with optional elements** - Zod v4 allows tuples like `[string, number?]` to have variable length, but v3 requires fixed length with `undefined` for optional elements.
+
+### Workarounds
+
+If you need these features, consider:
+
+- Using transforms instead of refinements where possible
+- Implementing validation logic outside of Zod
+- Using v3-compatible patterns from the start
+
+### Example of Limitations
+
+```typescript
+// These v4 features have limitations:
+
+// ❌ Refinements are lost
+const v4Refined = z.number().refine((n) => n % 2 === 0)
+const v3Refined = zodown(v4Refined) // Returns ZodNumber without refinement
+
+// ❌ Brands become base types
+const v4Branded = z.string().brand<'UserId'>()
+const v3Branded = zodown(v4Branded) // Returns ZodString, not ZodBranded
+
+// ❌ Optional tuple elements need all positions
+const v4Tuple = z.tuple([z.string(), z.number().optional()])
+const v3Tuple = zodown(v4Tuple)
+v3Tuple.parse(['hi', undefined]) // ✅ Works
+v3Tuple.parse(['hi']) // ❌ Fails - v3 needs fixed length
+```
+
 ## Use Cases
 
 - 📦 Using `@modelcontextprotocol/sdk` with modern Zod schemas

@@ -1,10 +1,10 @@
 <template>
   <section>
     <h2>USAGE</h2>
-    
+
     <div class="border">
       <h3>BASIC EXAMPLE</h3>
-      <pre style="background: var(--bg); border: none; padding: 0; color: var(--fg);">
+      <pre style="background: var(--bg); border: none; padding: 0; color: var(--fg)">
 import { z, zodown } from 'zodown' <span style="opacity: 0.5">// Includes Zod v4!</span>
 
 <span style="opacity: 0.7">// Write modern Zod v4 schemas</span>
@@ -26,7 +26,15 @@ const result = v3Schema.parse(userData)
     <div class="grid">
       <div class="card">
         <h4>WITH REFINEMENTS</h4>
-        <pre style="background: var(--bg); border: none; padding: 0; font-size: 0.85em; color: var(--fg);">
+        <pre
+          style="
+            background: var(--bg);
+            border: none;
+            padding: 0;
+            font-size: 0.85em;
+            color: var(--fg);
+          "
+        >
 const Password = z
   .string()
   .min(8)
@@ -41,7 +49,15 @@ const v3 = zodown(Password)
 
       <div class="card">
         <h4>WITH TRANSFORMS</h4>
-        <pre style="background: var(--bg); border: none; padding: 0; font-size: 0.85em; color: var(--fg);">
+        <pre
+          style="
+            background: var(--bg);
+            border: none;
+            padding: 0;
+            font-size: 0.85em;
+            color: var(--fg);
+          "
+        >
 const DateStr = z
   .string()
   .transform(s => new Date(s))
@@ -54,7 +70,15 @@ const v3 = zodown(DateStr)
 
       <div class="card">
         <h4>RECURSIVE SCHEMAS</h4>
-        <pre style="background: var(--bg); border: none; padding: 0; font-size: 0.85em; color: var(--fg);">
+        <pre
+          style="
+            background: var(--bg);
+            border: none;
+            padding: 0;
+            font-size: 0.85em;
+            color: var(--fg);
+          "
+        >
 const Node = z.lazy(() =>
   z.object({
     value: z.string(),
@@ -70,7 +94,14 @@ const v3 = zodown(Node)
 
     <div class="border dashed">
       <h3>SUPPORTED TYPES</h3>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.5rem; margin-top: 1rem;">
+      <div
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          gap: 0.5rem;
+          margin-top: 1rem;
+        "
+      >
         <span class="badge">STRING</span>
         <span class="badge">NUMBER</span>
         <span class="badge">BOOLEAN</span>

@@ -14,7 +14,7 @@ describe('Performance and Edge Cases', () => {
     const v4Schema = createDeepSchema(10)
     const v3Schema = zodown(v4Schema)
 
-    const testData = [[[[[[[[['deep']]]]]]]]]
+    const testData = [[[[[[[[[['deep']]]]]]]]]]
     expect(v3Schema.parse(testData)).toEqual(testData)
   })
 
@@ -32,9 +32,7 @@ describe('Performance and Edge Cases', () => {
 
   it('handles large schemas efficiently', () => {
     const largeObjectSchema = zod4.object(
-      Object.fromEntries(
-        Array.from({ length: 100 }, (_, i) => [`field${i}`, zod4.string()])
-      )
+      Object.fromEntries(Array.from({ length: 100 }, (_, i) => [`field${i}`, zod4.string()]))
     )
 
     const v3Schema = zodown(largeObjectSchema)
@@ -47,9 +45,7 @@ describe('Performance and Edge Cases', () => {
   })
 
   it('handles schema with many union options', () => {
-    const unionOptions = Array.from({ length: 20 }, (_, i) => 
-      zod4.literal(`option${i}`)
-    )
+    const unionOptions = Array.from({ length: 20 }, (_, i) => zod4.literal(`option${i}`))
     const v4Schema = zod4.union(unionOptions as any)
 
     const v3Schema = zodown(v4Schema)

@@ -76,7 +76,7 @@ export function zodown<T extends AnyZodV4Schema>(schema: T): DowngradeType<T> {
     if (!s) {
       return zod3.unknown()
     }
-    
+
     // Check cache first
     if (cache.has(s)) {
       return cache.get(s)!
@@ -91,6 +91,14 @@ export function zodown<T extends AnyZodV4Schema>(schema: T): DowngradeType<T> {
       const checks = (s as any)._def.checks || []
       let result = v3Schema as any
       for (const check of checks) {
+        // Handle superRefine (custom checks)
+        // Note: v4 compiles superRefine into internal check functions that we can't
+        // reverse-engineer. This is a known limitation - superRefine can't be converted.
+        if (check._zod?.def?.check === 'custom' && typeof check._zod?.check === 'function') {
+          // Skip - we can't convert compiled superRefine checks
+          console.warn('Warning: superRefine cannot be converted from v4 to v3')
+          continue
+        }
         // Handle custom refinements
         if (check.type === 'custom' || check.constructor?.name === 'ZodCustom') {
           if (check._zod?.def?.fn) {
@@ -182,6 +190,14 @@ export function zodown<T extends AnyZodV4Schema>(schema: T): DowngradeType<T> {
       const checks = (s as any)._def.checks || []
       let result: any = v3Schema
       for (const check of checks) {
+        // Handle superRefine (custom checks)
+        // Note: v4 compiles superRefine into internal check functions that we can't
+        // reverse-engineer. This is a known limitation - superRefine can't be converted.
+        if (check._zod?.def?.check === 'custom' && typeof check._zod?.check === 'function') {
+          // Skip - we can't convert compiled superRefine checks
+          console.warn('Warning: superRefine cannot be converted from v4 to v3')
+          continue
+        }
         // Handle custom refinements
         if (check.type === 'custom' || check.constructor?.name === 'ZodCustom') {
           if (check._zod?.def?.fn) {
@@ -348,18 +364,32 @@ export function zodown<T extends AnyZodV4Schema>(schema: T): DowngradeType<T> {
 
     // Handle enum types
     if (s instanceof zod4.ZodEnum) {
-      const values = s.options
-      const v3Schema = zod3.enum(values as [string, ...string[]])
-      cache.set(s, v3Schema)
-      return v3Schema
-    }
+      const entries = (s as any)._def?.entries
+      if (entries) {
+        // Check if this is a native enum by seeing if keys match values
+        // In regular enums, keys === values. In native enums, they don't.
+        const entriesArray = Object.entries(entries)
+        const isNativeEnum = !entriesArray.every(([key, value]) => key === value)
 
-    // Handle native enum - in v4, native enum has entries in _def
-    if (s && typeof s === 'object' && (s as any)._def?.entries) {
-      const entries = (s as any)._def.entries
-      const v3Schema = zod3.nativeEnum(entries)
-      cache.set(s, v3Schema)
-      return v3Schema
+        if (isNativeEnum) {
+          // Native enum - keys don't match values
+          const v3Schema = zod3.nativeEnum(entries)
+          cache.set(s, v3Schema)
+          return v3Schema
+        } else {
+          // Regular enum - keys match values
+          const values = s.options
+          const v3Schema = zod3.enum(values as [string, ...string[]])
+          cache.set(s, v3Schema)
+          return v3Schema
+        }
+      } else if (s.options && Array.isArray(s.options)) {
+        // Fallback for regular enum without entries
+        const values = s.options
+        const v3Schema = zod3.enum(values as [string, ...string[]])
+        cache.set(s, v3Schema)
+        return v3Schema
+      }
     }
 
     // Handle wrapper types
@@ -403,8 +433,22 @@ export function zodown<T extends AnyZodV4Schema>(schema: T): DowngradeType<T> {
             v3Schema = v3Schema.min(checkDef.minimum, checkDef.error?.())
           } else if (checkDef.check === 'max_length') {
             v3Schema = v3Schema.max(checkDef.maximum, checkDef.error?.())
-          } else if (checkDef.check === 'exact_length') {
+          } else if (checkDef.check === 'length_equals') {
+            // In v4 it's length_equals, not exact_length
             v3Schema = v3Schema.length(checkDef.length, checkDef.error?.())
+          }
+        } else {
+          // Fallback for old format
+          switch (check.kind) {
+            case 'min':
+              v3Schema = v3Schema.min(check.value, check.message)
+              break
+            case 'max':
+              v3Schema = v3Schema.max(check.value, check.message)
+              break
+            case 'length':
+              v3Schema = v3Schema.length(check.value, check.message)
+              break
           }
         }
       }
@@ -431,7 +475,7 @@ export function zodown<T extends AnyZodV4Schema>(schema: T): DowngradeType<T> {
       // Handle strict/strip/passthrough
       const unknownKeys = (s as any)._def.unknownKeys
       const catchall = (s as any)._def.catchall
-      
+
       // In Zod v4, strict/passthrough is handled via catchall
       if (catchall && typeof catchall === 'object') {
         if (catchall instanceof zod4.ZodNever || catchall.constructor?.name === 'ZodNever') {
@@ -482,7 +526,28 @@ export function zodown<T extends AnyZodV4Schema>(schema: T): DowngradeType<T> {
     if (s instanceof zod4.ZodTuple) {
       const items = (s as any)._def.items
       const v3Items = items.map((item: AnyZodV4Schema) => downgrade(item))
-      const v3Schema = zod3.tuple(v3Items)
+      let v3Schema = zod3.tuple(v3Items)
+
+      // Handle rest element if present
+      const rest = (s as any)._def.rest
+      if (rest) {
+        v3Schema = (v3Schema as any).rest(downgrade(rest))
+      }
+
+      cache.set(s, v3Schema)
+      return v3Schema
+    }
+
+    // Handle discriminated union type
+    if (
+      s &&
+      (s.constructor?.name === 'ZodDiscriminatedUnion' ||
+        ((zod4 as any).ZodDiscriminatedUnion && s instanceof (zod4 as any).ZodDiscriminatedUnion))
+    ) {
+      const discriminator = (s as any)._def.discriminator
+      const options = (s as any)._def.options
+      const v3Options = options.map((option: AnyZodV4Schema) => downgrade(option))
+      const v3Schema = zod3.discriminatedUnion(discriminator, v3Options)
       cache.set(s, v3Schema)
       return v3Schema
     }
@@ -521,11 +586,78 @@ export function zodown<T extends AnyZodV4Schema>(schema: T): DowngradeType<T> {
       return v3Schema
     }
 
+    // Handle ZodCatch
+    if (
+      s &&
+      (s.constructor?.name === 'ZodCatch' ||
+        ((zod4 as any).ZodCatch && s instanceof (zod4 as any).ZodCatch))
+    ) {
+      const inner = (s as any)._def.innerType
+      const catchValue = (s as any)._def.catchValue
+      const v3Inner = downgrade(inner)
+      const v3Schema = v3Inner.catch(typeof catchValue === 'function' ? catchValue() : catchValue)
+      cache.set(s, v3Schema)
+      return v3Schema
+    }
+
+    // Handle ZodReadonly
+    if (s && s.constructor?.name === 'ZodReadonly') {
+      const inner = (s as any)._def.innerType
+      const v3Inner = downgrade(inner)
+      const v3Schema = v3Inner.readonly()
+      cache.set(s, v3Schema)
+      return v3Schema
+    }
+
+    // Handle ZodBranded - In v4, branded is implemented differently
+    // Check for brand in checks or if it has the brand symbol
+    if (s && typeof s === 'object') {
+      const hasBrand =
+        (s as any)._def?.brand ||
+        (s as any).constructor?.name === 'ZodBranded' ||
+        (s as any)._def?.checks?.some?.((c: any) => c?.kind === 'brand')
+
+      if (hasBrand) {
+        // Get the base schema
+        const baseSchema = (s as any)._def?.innerType || s
+        const v3Base = downgrade(baseSchema)
+        // Apply branding in v3
+        if (typeof v3Base.brand === 'function') {
+          const v3Schema = v3Base.brand()
+          cache.set(s, v3Schema)
+          return v3Schema
+        }
+        return v3Base
+      }
+    }
+
     // Handle ZodPipe (transforms and preprocess in v4)
     if (s && s.constructor?.name === 'ZodPipe') {
       const inSchema = (s as any)._def.in
       const outSchema = (s as any)._def.out
-      
+
+      // Check if output has coerce flag (e.g., z.string().pipe(z.coerce.number()))
+      if (outSchema?._def?.coerce) {
+        // This is a coercion pipe
+        const v3In = downgrade(inSchema)
+
+        // Create a transform that does the coercion
+        let coerceFn: (val: any) => any
+        if (outSchema.constructor.name === 'ZodNumber') {
+          coerceFn = (val: any) => Number(val)
+        } else if (outSchema.constructor.name === 'ZodString') {
+          coerceFn = (val: any) => String(val)
+        } else if (outSchema.constructor.name === 'ZodBoolean') {
+          coerceFn = (val: any) => Boolean(val)
+        } else {
+          coerceFn = (val: any) => val
+        }
+
+        const v3Schema = v3In.transform(coerceFn)
+        cache.set(s, v3Schema)
+        return v3Schema
+      }
+
       // Check if this is a preprocess (in is ZodTransform with ZodUnknown base)
       if (inSchema && inSchema.constructor.name === 'ZodTransform') {
         const transformFn = inSchema._def?.transform
@@ -537,7 +669,7 @@ export function zodown<T extends AnyZodV4Schema>(schema: T): DowngradeType<T> {
           return v3Schema
         }
       }
-      
+
       // Check if this is a transform (out is ZodTransform)
       if (outSchema && outSchema.constructor.name === 'ZodTransform') {
         const v3In = downgrade(inSchema)
@@ -546,14 +678,14 @@ export function zodown<T extends AnyZodV4Schema>(schema: T): DowngradeType<T> {
         cache.set(s, v3Schema)
         return v3Schema
       }
-      
+
       // For other pipes, return output schema as fallback
       const v3Out = downgrade(outSchema)
       const v3Schema = v3Out
       cache.set(s, v3Schema)
       return v3Schema
     }
-    
+
     // Handle ZodEffects (older v4 or v3-style effects)
     if ((s as any)._def?.typeName === 'ZodEffects') {
       const schema = (s as any)._def.schema

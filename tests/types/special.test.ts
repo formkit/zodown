@@ -48,15 +48,21 @@ describe('Special Types', () => {
     const v4Schema = zod4.string().brand<'UserId'>()
     const v3Schema = zodown(v4Schema)
 
-    expect(v3Schema).toBeInstanceOf(zod3.ZodBranded)
+    // Note: In v4, branding is purely type-level with no runtime representation
+    // So we can't convert it to v3's ZodBranded. The schema remains a ZodString
+    expect(v3Schema).toBeInstanceOf(zod3.ZodString)
     expect(v3Schema.parse('user123')).toBe('user123')
+
+    // This is a known limitation - v4 brands are compile-time only
   })
 
   it('converts readonly schemas', () => {
-    const v4Schema = zod4.object({
-      name: zod4.string(),
-      age: zod4.number(),
-    }).readonly()
+    const v4Schema = zod4
+      .object({
+        name: zod4.string(),
+        age: zod4.number(),
+      })
+      .readonly()
 
     const v3Schema = zodown(v4Schema)
 

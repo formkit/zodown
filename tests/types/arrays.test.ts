@@ -26,7 +26,15 @@ describe('Array Types', () => {
     const v4Schema = zod4.array(zod4.array(zod4.boolean()))
     const v3Schema = zodown(v4Schema)
 
-    expect(v3Schema.parse([[true, false], [false, true]])).toEqual([[true, false], [false, true]])
+    expect(
+      v3Schema.parse([
+        [true, false],
+        [false, true],
+      ])
+    ).toEqual([
+      [true, false],
+      [false, true],
+    ])
     expect(() => v3Schema.parse([[true, 'false']])).toThrow()
   })
 
