@@ -1,140 +1,227 @@
 <template>
-  <section>
-    <h2>USAGE</h2>
+  <section id="usage" class="section-container">
+    <h1>USAGE</h1>
+    
+    <div class="terminal-window">
+      <div class="terminal-header">
+        <div class="terminal-buttons">
+          <span class="terminal-button close"></span>
+          <span class="terminal-button minimize"></span>
+          <span class="terminal-button maximize"></span>
+        </div>
+        <div class="terminal-title">example@basic-usage</div>
+        <div style="width: 60px"></div>
+      </div>
+      
+      <div class="terminal-body">
+        <pre><span class="keyword">import</span> { z, zodown } <span class="keyword">from</span> <span class="string">'zodown'</span> <span class="comment">// Includes Zod v4!</span>
 
-    <div class="border">
-      <h3>BASIC EXAMPLE</h3>
-      <pre style="background: var(--bg); border: none; padding: 0; color: var(--fg)">
-import { z, zodown } from 'zodown' <span style="opacity: 0.5">// Includes Zod v4!</span>
-
-<span style="opacity: 0.7">// Write modern Zod v4 schemas</span>
-const UserSchema = z.object({
+<span class="comment">// Write modern Zod v4 schemas</span>
+<span class="keyword">const</span> UserSchema = z.object({
   id: z.string().uuid(),
   email: z.string().email(),
   age: z.number().int().positive(),
-  roles: z.array(z.enum(['admin', 'user', 'guest']))
+  roles: z.array(z.enum([<span class="string">'admin'</span>, <span class="string">'user'</span>, <span class="string">'guest'</span>]))
 })
 
-<span style="opacity: 0.7">// Convert to Zod v3</span>
-const v3Schema = zodown(UserSchema)
+<span class="comment">// Convert to Zod v3</span>
+<span class="keyword">const</span> v3Schema = zodown(UserSchema)
 
-<span style="opacity: 0.7">// Use with v3-dependent libraries</span>
-const result = v3Schema.parse(userData)
-      </pre>
+<span class="comment">// Use with v3-dependent libraries</span>
+<span class="keyword">const</span> result = v3Schema.parse(userData)</pre>
+      </div>
     </div>
 
-    <div class="grid">
-      <div class="card">
-        <h4>WITH REFINEMENTS</h4>
-        <pre
-          style="
-            background: var(--bg);
-            border: none;
-            padding: 0;
-            font-size: 0.85em;
-            color: var(--fg);
-          "
-        >
-const Password = z
+    <div class="examples-grid">
+      <div class="example-card">
+        <div class="example-header">
+          <span class="prompt">WITH REFINEMENTS</span>
+        </div>
+        <pre><span class="keyword">const</span> Password = z
   .string()
-  .min(8)
-  .regex(/[A-Z]/)
-  .regex(/[0-9]/)
+  .min(<span class="number">8</span>)
+  .regex(<span class="regex">/[A-Z]/</span>)
+  .regex(<span class="regex">/[0-9]/</span>)
   .refine(custom)
 
-const v3 = zodown(Password)
-<span style="opacity: 0.5">// All refinements preserved!</span>
-        </pre>
+<span class="keyword">const</span> v3 = zodown(Password)
+<span class="comment">// All refinements preserved!</span></pre>
       </div>
 
-      <div class="card">
-        <h4>WITH TRANSFORMS</h4>
-        <pre
-          style="
-            background: var(--bg);
-            border: none;
-            padding: 0;
-            font-size: 0.85em;
-            color: var(--fg);
-          "
-        >
-const DateStr = z
+      <div class="example-card">
+        <div class="example-header">
+          <span class="prompt">WITH TRANSFORMS</span>
+        </div>
+        <pre><span class="keyword">const</span> DateStr = z
   .string()
-  .transform(s => new Date(s))
+  .transform(s => <span class="keyword">new</span> Date(s))
   .refine(d => !isNaN(d))
 
-const v3 = zodown(DateStr)
-<span style="opacity: 0.5">// Transforms work too!</span>
-        </pre>
+<span class="keyword">const</span> v3 = zodown(DateStr)
+<span class="comment">// Transforms work too!</span></pre>
       </div>
 
-      <div class="card">
-        <h4>RECURSIVE SCHEMAS</h4>
-        <pre
-          style="
-            background: var(--bg);
-            border: none;
-            padding: 0;
-            font-size: 0.85em;
-            color: var(--fg);
-          "
-        >
-const Node = z.lazy(() =>
+      <div class="example-card">
+        <div class="example-header">
+          <span class="prompt">RECURSIVE SCHEMAS</span>
+        </div>
+        <pre><span class="keyword">const</span> Node = z.lazy(() =>
   z.object({
     value: z.string(),
     children: z.array(Node)
   })
 )
 
-const v3 = zodown(Node)
-<span style="opacity: 0.5">// Handles circular refs!</span>
-        </pre>
+<span class="keyword">const</span> v3 = zodown(Node)
+<span class="comment">// Handles circular refs!</span></pre>
       </div>
     </div>
 
-    <div class="border dashed">
-      <h3>SUPPORTED TYPES</h3>
-      <div
-        style="
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-          gap: 0.5rem;
-          margin-top: 1rem;
-        "
-      >
-        <span class="badge">STRING</span>
-        <span class="badge">NUMBER</span>
-        <span class="badge">BOOLEAN</span>
-        <span class="badge">DATE</span>
-        <span class="badge">BIGINT</span>
-        <span class="badge">SYMBOL</span>
-        <span class="badge">UNDEFINED</span>
-        <span class="badge">NULL</span>
-        <span class="badge">VOID</span>
-        <span class="badge">ANY</span>
-        <span class="badge">UNKNOWN</span>
-        <span class="badge">NEVER</span>
-        <span class="badge">LITERAL</span>
-        <span class="badge">ENUM</span>
-        <span class="badge">NATIVE ENUM</span>
-        <span class="badge">OBJECT</span>
-        <span class="badge">ARRAY</span>
-        <span class="badge">TUPLE</span>
-        <span class="badge">RECORD</span>
-        <span class="badge">MAP</span>
-        <span class="badge">SET</span>
-        <span class="badge">UNION</span>
-        <span class="badge">INTERSECTION</span>
-        <span class="badge">OPTIONAL</span>
-        <span class="badge">NULLABLE</span>
-        <span class="badge">DEFAULT</span>
-        <span class="badge">LAZY</span>
-        <span class="badge">PROMISE</span>
-        <span class="badge">FUNCTION</span>
-        <span class="badge">REFINE</span>
-        <span class="badge">TRANSFORM</span>
-        <span class="badge">PREPROCESS</span>
+    <div class="supported-types">
+      <div class="types-header">
+        <span class="success">●</span> SUPPORTED TYPES <span class="type-count">[31 TYPES]</span>
+      </div>
+      <div class="types-grid">
+        <span class="type-badge">STRING</span>
+        <span class="type-badge">NUMBER</span>
+        <span class="type-badge">BOOLEAN</span>
+        <span class="type-badge">DATE</span>
+        <span class="type-badge">BIGINT</span>
+        <span class="type-badge">SYMBOL</span>
+        <span class="type-badge">UNDEFINED</span>
+        <span class="type-badge">NULL</span>
+        <span class="type-badge">VOID</span>
+        <span class="type-badge">ANY</span>
+        <span class="type-badge">UNKNOWN</span>
+        <span class="type-badge">NEVER</span>
+        <span class="type-badge">LITERAL</span>
+        <span class="type-badge">ENUM</span>
+        <span class="type-badge">NATIVE_ENUM</span>
+        <span class="type-badge">OBJECT</span>
+        <span class="type-badge">ARRAY</span>
+        <span class="type-badge">TUPLE</span>
+        <span class="type-badge">RECORD</span>
+        <span class="type-badge">MAP</span>
+        <span class="type-badge">SET</span>
+        <span class="type-badge">UNION</span>
+        <span class="type-badge">INTERSECTION</span>
+        <span class="type-badge">OPTIONAL</span>
+        <span class="type-badge">NULLABLE</span>
+        <span class="type-badge">DEFAULT</span>
+        <span class="type-badge">LAZY</span>
+        <span class="type-badge">PROMISE</span>
+        <span class="type-badge">FUNCTION</span>
+        <span class="type-badge">REFINE</span>
+        <span class="type-badge">TRANSFORM</span>
+        <span class="type-badge">PREPROCESS</span>
       </div>
     </div>
   </section>
 </template>
+
+<style scoped>
+.section-container {
+  margin: 4rem 0;
+}
+
+.examples-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.example-card {
+  border: 1px solid var(--border-dim);
+  background: var(--bg-elevated);
+  overflow: hidden;
+}
+
+.example-header {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-dim);
+  background: var(--bg-highlight);
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+}
+
+.example-card pre {
+  padding: 1rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 0;
+  border: none;
+  background: transparent;
+}
+
+.example-card pre::before {
+  display: none;
+}
+
+.keyword {
+  color: var(--accent-alt);
+}
+
+.string {
+  color: var(--warning);
+}
+
+.comment {
+  color: var(--fg-dim);
+  font-style: italic;
+}
+
+.number {
+  color: var(--accent);
+}
+
+.regex {
+  color: var(--error);
+}
+
+.supported-types {
+  margin: 3rem 0;
+  border: 1px solid var(--border-dim);
+  background: var(--bg-elevated);
+}
+
+.types-header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-dim);
+  background: var(--bg-highlight);
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.type-count {
+  margin-left: auto;
+  color: var(--fg-dim);
+  font-size: 0.8rem;
+}
+
+.types-grid {
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.5rem;
+}
+
+.type-badge {
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--border-dim);
+  background: var(--bg);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-align: center;
+  transition: all 0.2s;
+  cursor: default;
+}
+
+.type-badge:hover {
+  border-color: var(--fg);
+  color: var(--fg-bright);
+  text-shadow: 0 0 5px currentColor;
+}
+</style>

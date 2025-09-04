@@ -7,7 +7,12 @@
       "Bash(sed:*)",
       "Bash(pnpm typecheck:*)",
       "Bash(npx tsc:*)",
-      "WebFetch(domain:zod.dev)"
+      "WebFetch(domain:zod.dev)",
+      "Bash(pnpm dev:*)",
+      "Bash(pnpm docs:dev:*)",
+      "Bash(pnpm:*)",
+      "Bash(node:*)",
+      "Bash(grep:*)"
     ],
     "deny": [],
     "ask": []
