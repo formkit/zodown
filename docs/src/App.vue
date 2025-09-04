@@ -126,6 +126,28 @@ const desktopArt = ref(`<span class="dim">┌───────────�
 <span class="dim">│</span>                                                                        <span class="dim">│</span>
 <span class="dim">├────────────────────────────────────────────────────────────────────────┤</span>
 <span class="dim">│</span>                                                                        <span class="dim">│</span>
+<span class="dim">│</span> <span class="bright">KNOWN LIMITATIONS</span>                                                      <span class="dim">│</span>
+<span class="dim">│</span> <span class="dim">═════════════════</span>                                                      <span class="dim">│</span>
+<span class="dim">│</span>                                                                        <span class="dim">│</span>
+<span class="dim">│</span>   Due to architectural differences between Zod v3 and v4:              <span class="dim">│</span>
+<span class="dim">│</span>                                                                        <span class="dim">│</span>
+<span class="dim">│</span>   <span class="warning">⚠</span> <span class="accent">Base type refinements</span> - .refine() and .superRefine() on base      <span class="dim">│</span>
+<span class="dim">│</span>     types cannot be converted (internal check functions). Returns      <span class="dim">│</span>
+<span class="dim">│</span>     base schema without refinement.                                    <span class="dim">│</span>
+<span class="dim">│</span>                                                                        <span class="dim">│</span>
+<span class="dim">│</span>   <span class="warning">⚠</span> <span class="accent">Branded types</span> - v4 brands are compile-time only, v3 expects     <span class="dim">│</span>
+<span class="dim">│</span>     runtime ZodBranded. Returns base type without brand.               <span class="dim">│</span>
+<span class="dim">│</span>                                                                        <span class="dim">│</span>
+<span class="dim">│</span>   <span class="warning">⚠</span> <span class="accent">Variable-length tuples</span> - v4 allows [string, number?] with       <span class="dim">│</span>
+<span class="dim">│</span>     variable length, v3 requires fixed length with undefined.          <span class="dim">│</span>
+<span class="dim">│</span>                                                                        <span class="dim">│</span>
+<span class="dim">│</span>   <span class="accent">Workarounds:</span>                                                        <span class="dim">│</span>
+<span class="dim">│</span>     • Use transforms instead of refinements where possible             <span class="dim">│</span>
+<span class="dim">│</span>     • Implement validation logic outside of Zod                        <span class="dim">│</span>
+<span class="dim">│</span>     • Use v3-compatible patterns from the start                        <span class="dim">│</span>
+<span class="dim">│</span>                                                                        <span class="dim">│</span>
+<span class="dim">├────────────────────────────────────────────────────────────────────────┤</span>
+<span class="dim">│</span>                                                                        <span class="dim">│</span>
 <span class="dim">│</span>  <a href="https://github.com/justinschroeder/zodown" target="_blank"><span class="accent">[GitHub]</span></a>  <a href="https://npmjs.com/package/zodown" target="_blank"><span class="accent">[NPM]</span></a>  <span class="accent">[Documentation]</span>                                      <span class="dim">│</span>
 <span class="dim">│</span>                                                                        <span class="dim">│</span>
 <span class="dim">│</span>  <span class="dim">Made with ♥ by the</span> <a href="https://formkit.com" target="_blank"><span class="accent">FormKit team</span></a>                                       <span class="dim">│</span>
@@ -173,6 +195,19 @@ const mobileArt = ref(`<span class="accent">zodown</span> <span class="dim">v1.0
 server.addTool({
   inputSchema: <span class="function">zodown</span>(Args)
 })
+
+<span class="dim">────────────────────────────────────────</span>
+<span class="bright">LIMITATIONS</span>
+
+<span class="warning">⚠</span> Base type refinements lost
+<span class="warning">⚠</span> Branded types → base types
+<span class="warning">⚠</span> Variable-length tuples need
+  fixed length in v3
+
+<span class="accent">Workarounds:</span>
+• Use transforms not refinements
+• Validate outside Zod
+• Use v3 patterns
 
 <span class="dim">────────────────────────────────────────</span>
 

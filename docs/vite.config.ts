@@ -3,5 +3,5 @@ import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
   plugins: [vue()],
-  base: '/zodown/',
+  base: process.env.GITHUB_PAGES === 'true' ? '/zodown/' : '/',
 })
