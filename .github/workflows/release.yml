@@ -20,7 +20,7 @@ jobs:
 
       - uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: 10.14.0
 
       - uses: actions/setup-node@v4
         with:
@@ -33,11 +33,6 @@ jobs:
 
       - name: Build package
         run: pnpm build
-
-      - name: Publish to npm
-        run: pnpm publish --no-git-checks --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1

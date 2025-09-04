@@ -42,7 +42,7 @@
     "lint": "prettier --check .",
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
-    "release": "bumpp",
+    "release": "pnpm test:run && pnpm build && bumpp && npm publish --access public",
     "prepublishOnly": "pnpm run build",
     "docs:dev": "pnpm --filter docs dev",
     "docs:build": "pnpm --filter docs build",
