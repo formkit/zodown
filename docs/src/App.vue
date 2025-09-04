@@ -6,10 +6,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed } from 'vue'
 
-const desktopArt = ref(`<span class="dim">┌────────────────────────────────────────────────────────────────────────┐</span>
-<span class="dim">│</span>  <span class="accent">zodown</span> <span class="dim">v1.0.0</span>                                                         <span class="dim">│</span>
+// Use the version from Vite define
+const version = __APP_VERSION__
+
+const desktopArt = computed(() => {
+  const versionStr = `v${version}`
+  const versionPadding = 74 - 11 - versionStr.length // Total 72 chars inner content, minus "zodown" (6), spaces (3), and version
+
+  return `<span class="dim">┌────────────────────────────────────────────────────────────────────────┐</span>
+<span class="dim">│</span>  <span class="accent">zodown</span> <span class="dim">${versionStr}</span>${' '.repeat(versionPadding)}<span class="dim">│</span>
 <span class="dim">├────────────────────────────────────────────────────────────────────────┤</span>
 <span class="dim">│</span>                                                                        <span class="dim">│</span>
 <span class="dim">│</span>  <span class="accent">███████╗ ██████╗ ██████╗  ██████╗ ██╗    ██╗███╗   ██╗</span>                <span class="dim">│</span>
@@ -48,8 +55,8 @@ const desktopArt = ref(`<span class="dim">┌───────────�
 <span class="dim">│</span> <span class="dim">════════════</span>                                                           <span class="dim">│</span>
 <span class="dim">│</span>                                                                        <span class="dim">│</span>
 <span class="dim">│</span>   <span class="dim">┌─────────────────────┬─────────────────────┬─────────────────────┐</span>  <span class="dim">│</span>
-<span class="dim">│</span>   <span class="dim">│</span> <span class="success">✓</span> Type Safety      <span class="dim">│</span> <span class="success">✓</span> Zero Config      <span class="dim">│</span> <span class="success">✓</span> Tree-Shakeable   <span class="dim">│</span>     <span class="dim">│</span>
-<span class="dim">│</span>   <span class="dim">│</span>   <span class="dim">Preserved</span>        <span class="dim">│</span>   <span class="dim">Required</span>         <span class="dim">│</span>   <span class="number">~1.3KB</span> <span class="dim">gzip</span>      <span class="dim">│</span>     <span class="dim">│</span>
+<span class="dim">│</span>   <span class="dim">│</span> <span class="success">✓</span> Type Safety       <span class="dim">│</span> <span class="success">✓</span> Zero Config       <span class="dim">│</span> <span class="success">✓</span> Tree-Shakeable    <span class="dim">│</span>  <span class="dim">│</span>
+<span class="dim">│</span>   <span class="dim">│</span>   <span class="dim">Preserved</span>         <span class="dim">│</span>   <span class="dim">Required</span>          <span class="dim">│</span>   <span class="number">~1.3KB</span> <span class="dim">gzip</span>       <span class="dim">│</span>  <span class="dim">│</span>
 <span class="dim">│</span>   <span class="dim">└─────────────────────┴─────────────────────┴─────────────────────┘</span>  <span class="dim">│</span>
 <span class="dim">│</span>                                                                        <span class="dim">│</span>
 <span class="dim">├────────────────────────────────────────────────────────────────────────┤</span>
@@ -80,20 +87,22 @@ const desktopArt = ref(`<span class="dim">┌───────────�
 <span class="dim">│</span>   })                                                                   <span class="dim">│</span>
 <span class="dim">│</span>                                                                        <span class="dim">│</span>
 <span class="dim">│</span>   <span class="comment">// Create MCP server (requires Zod v3)</span>                               <span class="dim">│</span>
-<span class="dim">│</span>   <span class="keyword">import</span> { Server } <span class="keyword">from</span> <span class="string">'@modelcontextprotocol/sdk/server/index.js'</span>   <span class="dim">│</span>
+<span class="dim">│</span>   <span class="keyword">import</span> { McpServer } <span class="keyword">from</span> <span class="string">'@modelcontextprotocol/sdk/server/mcp.js'</span>  <span class="dim">│</span>
 <span class="dim">│</span>                                                                        <span class="dim">│</span>
-<span class="dim">│</span>   <span class="keyword">const</span> server = <span class="keyword">new</span> Server({                                          <span class="dim">│</span>
-<span class="dim">│</span>     name: <span class="string">'search-server'</span>,                                             <span class="dim">│</span>
+<span class="dim">│</span>   <span class="keyword">const</span> server = <span class="keyword">new</span> McpServer({                                       <span class="dim">│</span>
+<span class="dim">│</span>     name: <span class="string">'weather'</span>,                                                   <span class="dim">│</span>
 <span class="dim">│</span>     version: <span class="string">'1.0.0'</span>                                                   <span class="dim">│</span>
 <span class="dim">│</span>   })                                                                   <span class="dim">│</span>
 <span class="dim">│</span>                                                                        <span class="dim">│</span>
-<span class="dim">│</span>   server.setRequestHandler(ListToolsRequestSchema, () => ({            <span class="dim">│</span>
-<span class="dim">│</span>     tools: [{                                                          <span class="dim">│</span>
-<span class="dim">│</span>       name: <span class="string">'search'</span>,                                                  <span class="dim">│</span>
-<span class="dim">│</span>       description: <span class="string">'Search the knowledge base'</span>,                        <span class="dim">│</span>
-<span class="dim">│</span>       inputSchema: <span class="function">zodown</span>(QueryArgsSchema)  <span class="comment">// ← Convert v4 to v3!</span>     <span class="dim">│</span>
-<span class="dim">│</span>     }]                                                                 <span class="dim">│</span>
-<span class="dim">│</span>   }))                                                                  <span class="dim">│</span>
+<span class="dim">│</span>   server.tool(                                                         <span class="dim">│</span>
+<span class="dim">│</span>     <span class="string">'get-weather'</span>,                                                     <span class="dim">│</span>
+<span class="dim">│</span>     <span class="string">'Get weather for a location'</span>,                                      <span class="dim">│</span>
+<span class="dim">│</span>     <span class="function">zodown</span>(QueryArgsSchema),  <span class="comment">// ← Convert v4 to v3!</span>                   <span class="dim">│</span>
+<span class="dim">│</span>     <span class="keyword">async</span> ({ query, limit, filters }) => {                             <span class="dim">│</span>
+<span class="dim">│</span>       <span class="comment">// Implementation here</span>                                           <span class="dim">│</span>
+<span class="dim">│</span>       <span class="keyword">return</span> { results: [...] }                                        <span class="dim">│</span>
+<span class="dim">│</span>     }                                                                  <span class="dim">│</span>
+<span class="dim">│</span>   )                                                                    <span class="dim">│</span>
 <span class="dim">│</span>                                                                        <span class="dim">│</span>
 <span class="dim">├────────────────────────────────────────────────────────────────────────┤</span>
 <span class="dim">│</span>                                                                        <span class="dim">│</span>
@@ -126,35 +135,15 @@ const desktopArt = ref(`<span class="dim">┌───────────�
 <span class="dim">│</span>                                                                        <span class="dim">│</span>
 <span class="dim">├────────────────────────────────────────────────────────────────────────┤</span>
 <span class="dim">│</span>                                                                        <span class="dim">│</span>
-<span class="dim">│</span> <span class="bright">KNOWN LIMITATIONS</span>                                                      <span class="dim">│</span>
-<span class="dim">│</span> <span class="dim">═════════════════</span>                                                      <span class="dim">│</span>
-<span class="dim">│</span>                                                                        <span class="dim">│</span>
-<span class="dim">│</span>   Due to architectural differences between Zod v3 and v4:              <span class="dim">│</span>
-<span class="dim">│</span>                                                                        <span class="dim">│</span>
-<span class="dim">│</span>   <span class="warning">⚠</span> <span class="accent">Base type refinements</span> - .refine() and .superRefine() on base      <span class="dim">│</span>
-<span class="dim">│</span>     types cannot be converted (internal check functions). Returns      <span class="dim">│</span>
-<span class="dim">│</span>     base schema without refinement.                                    <span class="dim">│</span>
-<span class="dim">│</span>                                                                        <span class="dim">│</span>
-<span class="dim">│</span>   <span class="warning">⚠</span> <span class="accent">Branded types</span> - v4 brands are compile-time only, v3 expects     <span class="dim">│</span>
-<span class="dim">│</span>     runtime ZodBranded. Returns base type without brand.               <span class="dim">│</span>
-<span class="dim">│</span>                                                                        <span class="dim">│</span>
-<span class="dim">│</span>   <span class="warning">⚠</span> <span class="accent">Variable-length tuples</span> - v4 allows [string, number?] with       <span class="dim">│</span>
-<span class="dim">│</span>     variable length, v3 requires fixed length with undefined.          <span class="dim">│</span>
-<span class="dim">│</span>                                                                        <span class="dim">│</span>
-<span class="dim">│</span>   <span class="accent">Workarounds:</span>                                                        <span class="dim">│</span>
-<span class="dim">│</span>     • Use transforms instead of refinements where possible             <span class="dim">│</span>
-<span class="dim">│</span>     • Implement validation logic outside of Zod                        <span class="dim">│</span>
-<span class="dim">│</span>     • Use v3-compatible patterns from the start                        <span class="dim">│</span>
-<span class="dim">│</span>                                                                        <span class="dim">│</span>
-<span class="dim">├────────────────────────────────────────────────────────────────────────┤</span>
-<span class="dim">│</span>                                                                        <span class="dim">│</span>
 <span class="dim">│</span>  <a href="https://github.com/justinschroeder/zodown" target="_blank"><span class="accent">[GitHub]</span></a>  <a href="https://npmjs.com/package/zodown" target="_blank"><span class="accent">[NPM]</span></a>  <span class="accent">[Documentation]</span>                                      <span class="dim">│</span>
 <span class="dim">│</span>                                                                        <span class="dim">│</span>
-<span class="dim">│</span>  <span class="dim">Made with ♥ by the</span> <a href="https://formkit.com" target="_blank"><span class="accent">FormKit team</span></a>                                       <span class="dim">│</span>
+<span class="dim">│</span>  <span class="dim">Made with ♥ by the</span> <a href="https://bod.coach" target="_blank"><span class="accent">Bod.Coach team</span></a>                                     <span class="dim">│</span>
 <span class="dim">│</span>                                                                        <span class="dim">│</span>
-<span class="dim">└────────────────────────────────────────────────────────────────────────┘</span>`)
+<span class="dim">└────────────────────────────────────────────────────────────────────────┘</span>`
+})
 
-const mobileArt = ref(`<span class="accent">zodown</span> <span class="dim">v1.0.0</span>
+const mobileArt = computed(
+  () => `<span class="accent">zodown</span> <span class="dim">v${version}</span>
 <span class="comment">Write Zod v4, use in v3 libs</span>
 
 <span class="dim">────────────────────────────────────────</span>
@@ -191,27 +180,23 @@ const mobileArt = ref(`<span class="accent">zodown</span> <span class="dim">v1.0
   limit: z.number().max(100)
 })
 
-<span class="comment">// MCP needs v3</span>
-server.addTool({
-  inputSchema: <span class="function">zodown</span>(Args)
+<span class="comment">// MCP server with v3</span>
+<span class="keyword">const</span> server = <span class="keyword">new</span> McpServer({
+  name: <span class="string">'weather'</span>,
+  version: <span class="string">'1.0.0'</span>
 })
 
-<span class="dim">────────────────────────────────────────</span>
-<span class="bright">LIMITATIONS</span>
-
-<span class="warning">⚠</span> Base type refinements lost
-<span class="warning">⚠</span> Branded types → base types
-<span class="warning">⚠</span> Variable-length tuples need
-  fixed length in v3
-
-<span class="accent">Workarounds:</span>
-• Use transforms not refinements
-• Validate outside Zod
-• Use v3 patterns
+server.tool(
+  <span class="string">'search'</span>,
+  <span class="string">'Search tool'</span>,
+  <span class="function">zodown</span>(Args),
+  <span class="keyword">async</span> (args) => ({ ... })
+)
 
 <span class="dim">────────────────────────────────────────</span>
 
 <a href="https://github.com/justinschroeder/zodown"><span class="accent">[GitHub]</span></a> <a href="https://npmjs.com/package/zodown"><span class="accent">[NPM]</span></a>
 
-<span class="dim">Made with ♥ by the</span> <a href="https://formkit.com"><span class="accent">FormKit team</span></a>`)
+<span class="dim">Made with ♥ by the</span> <a href="https://bod.coach"><span class="accent">Bod.Coach team</span></a>`
+)
 </script>

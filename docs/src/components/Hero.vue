@@ -83,7 +83,7 @@
 import { ref, onMounted } from 'vue'
 import GitHubButton from './GitHubButton.vue'
 
-const version = ref('v1.0.0')
+const version = ref(`v${__APP_VERSION__}`)
 const showWhy = ref(false)
 
 onMounted(() => {

@@ -1,5 +1,15 @@
 // Build properly aligned ASCII art for the documentation
 import fs from 'fs';
+import { readFileSync } from 'fs';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+// Get version from main package.json
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const packageJson = JSON.parse(
+  readFileSync(resolve(__dirname, '../package.json'), 'utf-8')
+);
+const VERSION = packageJson.version;
 
 // Helper to pad a string to exact length
 function pad(str, len) {
@@ -40,7 +50,7 @@ const featuresTable = [
 
 // Now let's build the complete ASCII art with HTML tags
 const fullAsciiArt = `<span class="dim">┌────────────────────────────────────────────────────────────────────────┐</span>
-<span class="dim">│</span>  <span class="accent">zodown</span> <span class="dim">v1.0.0</span>                                          <span class="dim">[</span><span class="error">_</span><span class="dim">]</span> <span class="dim">[</span><span class="warning">□</span><span class="dim">]</span> <span class="dim">[</span><span class="success">X</span><span class="dim">]</span>  <span class="dim">│</span>
+<span class="dim">│</span>  <span class="accent">zodown</span> <span class="dim">v${VERSION}</span>                                          <span class="dim">[</span><span class="error">_</span><span class="dim">]</span> <span class="dim">[</span><span class="warning">□</span><span class="dim">]</span> <span class="dim">[</span><span class="success">X</span><span class="dim">]</span>  <span class="dim">│</span>
 <span class="dim">├────────────────────────────────────────────────────────────────────────┤</span>
 <span class="dim">│</span>                                                                        <span class="dim">│</span>
 <span class="dim">│</span>  <span class="accent">███████╗ ██████╗ ██████╗  ██████╗ ██╗    ██╗███╗   ██╗</span>             <span class="dim">│</span>

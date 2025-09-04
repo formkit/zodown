@@ -10,7 +10,6 @@ describe('Object Types', () => {
       age: zod4.number(),
     })
     const v3Schema = zodown(v4Schema)
-
     expect(v3Schema).toBeInstanceOf(zod3.ZodObject)
     expect(v3Schema.parse({ name: 'John', age: 30 })).toEqual({ name: 'John', age: 30 })
     expect(() => v3Schema.parse({ name: 'John' })).toThrow()

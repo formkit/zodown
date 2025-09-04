@@ -12,7 +12,9 @@
       "Bash(pnpm docs:dev:*)",
       "Bash(pnpm:*)",
       "Bash(node:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(curl:*)",
+      "Bash(npx tsx:*)"
     ],
     "deny": [],
     "ask": []

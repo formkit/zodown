@@ -5,6 +5,25 @@ type AnyZodV4Schema = zod4.ZodTypeAny
 type AnyZodV3Schema = zod3.ZodTypeAny
 
 /**
+ * Helper type to extract inner type from Zod schemas
+ */
+type ExtractInner<T> = T extends zod4.ZodOptional<infer I>
+  ? I
+  : T extends zod4.ZodNullable<infer I>
+    ? I
+    : T extends zod4.ZodDefault<infer I>
+      ? I
+      : T extends zod4.ZodArray<infer E>
+        ? E
+        : T extends zod4.ZodPromise<infer I>
+          ? I
+          : T extends zod4.ZodLazy<infer I>
+            ? I
+            : T extends zod4.ZodSet<infer E>
+              ? E
+              : never
+
+/**
  * Maps Zod v4 types to their v3 equivalents for type inference
  */
 type DowngradeType<T extends AnyZodV4Schema> = T extends zod4.ZodString
@@ -27,40 +46,60 @@ type DowngradeType<T extends AnyZodV4Schema> = T extends zod4.ZodString
                   ? zod3.ZodNever
                   : T extends zod4.ZodVoid
                     ? zod3.ZodVoid
-                    : T extends zod4.ZodLiteral<infer L>
-                      ? zod3.ZodLiteral<L>
-                      : T extends zod4.ZodEnum<any>
-                        ? zod3.ZodEnum<any>
-                        : T extends zod4.ZodOptional<any>
-                          ? zod3.ZodOptional<any>
-                          : T extends zod4.ZodNullable<any>
-                            ? zod3.ZodNullable<any>
-                            : T extends zod4.ZodDefault<any>
-                              ? zod3.ZodDefault<any>
-                              : T extends zod4.ZodArray<any>
-                                ? zod3.ZodArray<any>
-                                : T extends zod4.ZodObject<any>
-                                  ? zod3.ZodObject<any>
-                                  : T extends zod4.ZodRecord<any, any>
-                                    ? zod3.ZodRecord<any>
-                                    : T extends zod4.ZodTuple<any>
-                                      ? zod3.ZodTuple<any>
-                                      : T extends zod4.ZodUnion<any>
-                                        ? zod3.ZodUnion<any>
-                                        : T extends zod4.ZodIntersection<any, any>
-                                          ? zod3.ZodIntersection<any, any>
-                                          : T extends zod4.ZodLazy<any>
-                                            ? zod3.ZodLazy<any>
-                                            : T extends zod4.ZodPromise<any>
-                                              ? zod3.ZodPromise<any>
-                                              : T extends zod4.ZodBigInt
-                                                ? zod3.ZodBigInt
-                                                : T extends zod4.ZodSymbol
-                                                  ? zod3.ZodSymbol
+                    : T extends zod4.ZodBigInt
+                      ? zod3.ZodBigInt
+                      : T extends zod4.ZodSymbol
+                        ? zod3.ZodSymbol
+                        : T extends zod4.ZodLiteral<infer L>
+                          ? zod3.ZodLiteral<L>
+                          : T extends zod4.ZodEnum<any>
+                            ? zod3.ZodEnum<any>
+                            : T extends zod4.ZodOptional<any>
+                              ? ExtractInner<T> extends AnyZodV4Schema
+                                ? zod3.ZodOptional<DowngradeType<ExtractInner<T>>>
+                                : zod3.ZodOptional<AnyZodV3Schema>
+                              : T extends zod4.ZodNullable<any>
+                                ? ExtractInner<T> extends AnyZodV4Schema
+                                  ? zod3.ZodNullable<DowngradeType<ExtractInner<T>>>
+                                  : zod3.ZodNullable<AnyZodV3Schema>
+                                : T extends zod4.ZodDefault<any>
+                                  ? ExtractInner<T> extends AnyZodV4Schema
+                                    ? zod3.ZodDefault<DowngradeType<ExtractInner<T>>>
+                                    : zod3.ZodDefault<AnyZodV3Schema>
+                                  : T extends zod4.ZodArray<any>
+                                    ? ExtractInner<T> extends AnyZodV4Schema
+                                      ? zod3.ZodArray<DowngradeType<ExtractInner<T>>>
+                                      : zod3.ZodArray<AnyZodV3Schema>
+                                    : T extends zod4.ZodObject<infer S>
+                                      ? zod3.ZodObject<{
+                                          [K in keyof S]: S[K] extends AnyZodV4Schema ? DowngradeType<S[K]> : never
+                                        }>
+                                      : T extends zod4.ZodRecord<any, any>
+                                        ? zod3.ZodRecord<any>
+                                        : T extends zod4.ZodTuple<any>
+                                          ? zod3.ZodTuple<any>
+                                          : T extends zod4.ZodUnion<any>
+                                            ? zod3.ZodUnion<any>
+                                            : T extends zod4.ZodIntersection<infer L, infer R>
+                                              ? L extends AnyZodV4Schema
+                                                ? R extends AnyZodV4Schema
+                                                  ? zod3.ZodIntersection<DowngradeType<L>, DowngradeType<R>>
+                                                  : AnyZodV3Schema
+                                                : AnyZodV3Schema
+                                              : T extends zod4.ZodLazy<any>
+                                                ? ExtractInner<T> extends AnyZodV4Schema
+                                                  ? zod3.ZodLazy<DowngradeType<ExtractInner<T>>>
+                                                  : zod3.ZodLazy<AnyZodV3Schema>
+                                                : T extends zod4.ZodPromise<any>
+                                                  ? ExtractInner<T> extends AnyZodV4Schema
+                                                    ? zod3.ZodPromise<DowngradeType<ExtractInner<T>>>
+                                                    : zod3.ZodPromise<AnyZodV3Schema>
                                                   : T extends zod4.ZodMap<any, any>
                                                     ? zod3.ZodMap
                                                     : T extends zod4.ZodSet<any>
-                                                      ? zod3.ZodSet
+                                                      ? ExtractInner<T> extends AnyZodV4Schema
+                                                        ? zod3.ZodSet<DowngradeType<ExtractInner<T>>>
+                                                        : zod3.ZodSet
                                                       : AnyZodV3Schema
 
 /**

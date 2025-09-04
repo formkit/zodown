@@ -3,6 +3,16 @@
 // This tool ensures inner boxes are calculated first, then outer boxes
 
 import fs from 'fs';
+import { readFileSync } from 'fs';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+// Get version from main package.json
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const packageJson = JSON.parse(
+  readFileSync(resolve(__dirname, '../package.json'), 'utf-8')
+);
+const VERSION = packageJson.version;
 
 class AdvancedASCIIBuilder {
   constructor(mobile = false) {
@@ -96,7 +106,7 @@ class AdvancedASCIIBuilder {
     const lines = [];
     
     // Simplified header
-    lines.push(`<span class="accent">zodown</span> <span class="dim">v1.0.0</span>`);
+    lines.push(`<span class="accent">zodown</span> <span class="dim">v${VERSION}</span>`);
     lines.push(`<span class="comment">Write Zod v4, use in v3 libs</span>`);
     lines.push(``);
     lines.push(`<span class="dim">────────────────────────────────────────</span>`);
@@ -150,7 +160,7 @@ class AdvancedASCIIBuilder {
     lines.push(``);
     lines.push(`<a href="https://github.com/justinschroeder/zodown"><span class="accent">[GitHub]</span></a> <a href="https://npmjs.com/package/zodown"><span class="accent">[NPM]</span></a>`);
     lines.push(``);
-    lines.push(`<span class="dim">Made with ♥ by the</span> <a href="https://formkit.com"><span class="accent">FormKit team</span></a>`);
+    lines.push(`<span class="dim">Made with ♥ by the</span> <a href="https://bod.coach"><span class="accent">Bod.Coach team</span></a>`);
     
     return lines.join('\n');
   }
@@ -161,7 +171,9 @@ class AdvancedASCIIBuilder {
     
     // Header
     lines.push(this.topBorder());
-    lines.push(this.contentLine(`  <span class="accent">zodown</span> <span class="dim">v1.0.0</span>                                                      `));
+    const versionStr = `v${VERSION}`;
+    const padding = 70 - 9 - versionStr.length; // 70 inner content - 'zodown' (6) - spaces (3) - version length
+    lines.push(this.contentLine(`  <span class="accent">zodown</span> <span class="dim">${versionStr}</span>${' '.repeat(padding)}`));
     lines.push(this.divider());
     lines.push(this.contentLine(''));
     
@@ -249,7 +261,7 @@ class AdvancedASCIIBuilder {
     lines.push(this.contentLine(''));
     lines.push(this.contentLine(`   <span class="keyword">const</span> server = <span class="keyword">new</span> Server({                                         `));
     lines.push(this.contentLine(`     name: <span class="string">'search-server'</span>,                                            `));
-    lines.push(this.contentLine(`     version: <span class="string">'1.0.0'</span>                                                 `));
+    lines.push(this.contentLine(`     version: <span class="string">'${VERSION}'</span>                                                 `));
     lines.push(this.contentLine(`   })                                                                  `));
     lines.push(this.contentLine(''));
     lines.push(this.contentLine(`   server.setRequestHandler(ListToolsRequestSchema, () => ({          `));
@@ -301,7 +313,7 @@ class AdvancedASCIIBuilder {
     lines.push(this.contentLine(''));
     lines.push(this.contentLine(`  <a href="https://github.com/justinschroeder/zodown" target="_blank"><span class="accent">[GitHub]</span></a>  <a href="https://npmjs.com/package/zodown" target="_blank"><span class="accent">[NPM]</span></a>  <span class="accent">[Documentation]</span>                         `));
     lines.push(this.contentLine(''));
-    lines.push(this.contentLine(`  <span class="dim">Made with ♥ by the</span> <a href="https://formkit.com" target="_blank"><span class="accent">FormKit team</span></a>                                  `));
+    lines.push(this.contentLine(`  <span class="dim">Made with ♥ by the</span> <a href="https://bod.coach" target="_blank"><span class="accent">Bod.Coach team</span></a>                                  `));
     lines.push(this.contentLine(''));
     lines.push(this.bottomBorder());
     
