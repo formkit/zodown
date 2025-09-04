@@ -4,13 +4,13 @@
   "description": "Write Zod v4 schemas, run them in Zod v3 environments",
   "author": "Justin Schroeder",
   "license": "MIT",
-  "homepage": "https://github.com/justinschroeder/zodown",
+  "homepage": "https://github.com/formkit/zodown",
   "repository": {
     "type": "git",
-    "url": "https://github.com/justinschroeder/zodown.git"
+    "url": "https://github.com/formkit/zodown.git"
   },
   "bugs": {
-    "url": "https://github.com/justinschroeder/zodown/issues"
+    "url": "https://github.com/formkit/zodown/issues"
   },
   "keywords": [
     "zod",
