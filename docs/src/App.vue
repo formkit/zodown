@@ -1,22 +1,30 @@
 <template>
   <div class="ascii-container">
+    <GitHubStars @stars-updated="onStarsUpdated" />
     <pre class="ascii-page desktop" v-html="desktopArt"></pre>
     <pre class="ascii-page mobile" v-html="mobileArt"></pre>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import GitHubStars from './components/GitHubStars.vue'
 
 // Use the version from Vite define
 const version = __APP_VERSION__
+const stars = ref<number | null>(null)
+
+function onStarsUpdated(count: number) {
+  stars.value = count
+}
 
 const desktopArt = computed(() => {
   const versionStr = `v${version}`
-  const versionPadding = 74 - 11 - versionStr.length // Total 72 chars inner content, minus "zodown" (6), spaces (3), and version
+  const starsStr = stars.value !== null ? String(stars.value).padStart(4, '0') : '····'
+  const versionPadding = 74 - 13 - versionStr.length - starsStr.length - 3 // Adjust for stars display
 
   return `<span class="dim">┌────────────────────────────────────────────────────────────────────────┐</span>
-<span class="dim">│</span>  <span class="accent">zodown</span> <span class="dim">${versionStr}</span>${' '.repeat(versionPadding)}<span class="dim">│</span>
+<span class="dim">│</span>  <span class="accent">zodown</span> <span class="dim">${versionStr}</span>${' '.repeat(versionPadding)}<span class="dim">⭐</span> <a href="https://github.com/formkit/zodown/stargazers" target="_blank" class="stars-link"><span class="dim">${starsStr}</span></a>  <span class="dim">│</span>
 <span class="dim">├────────────────────────────────────────────────────────────────────────┤</span>
 <span class="dim">│</span>                                                                        <span class="dim">│</span>
 <span class="dim">│</span>  <span class="accent">███████╗ ██████╗ ██████╗  ██████╗ ██╗    ██╗███╗   ██╗</span>                <span class="dim">│</span>
@@ -142,8 +150,10 @@ const desktopArt = computed(() => {
 <span class="dim">└────────────────────────────────────────────────────────────────────────┘</span>`
 })
 
-const mobileArt = computed(
-  () => `<span class="accent">zodown</span> <span class="dim">v${version}</span>
+const mobileArt = computed(() => {
+  const starsStr = stars.value !== null ? String(stars.value).padStart(4, '0') : '····'
+  
+  return `<span class="accent">zodown</span> <span class="dim">v${version}</span>  <span class="dim">⭐</span> <a href="https://github.com/formkit/zodown/stargazers" target="_blank" class="stars-link"><span class="dim">${starsStr}</span></a>
 <span class="comment">Write Zod v4, use in v3 libs</span>
 
 <span class="dim">────────────────────────────────────────</span>
@@ -198,5 +208,5 @@ server.tool(
 <a href="https://github.com/justinschroeder/zodown"><span class="accent">[GitHub]</span></a> <a href="https://npmjs.com/package/zodown"><span class="accent">[NPM]</span></a>
 
 <span class="dim">Made with ♥ by the</span> <a href="https://bod.coach"><span class="accent">Bod.Coach team</span></a>`
-)
+})
 </script>

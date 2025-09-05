@@ -33,17 +33,14 @@ html, body {
 }
 
 body {
-  font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Monaco', 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+  font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Consolas', 'Courier New', monospace;
   background: var(--bg);
   color: var(--fg);
   line-height: 1.2;
-  -webkit-font-smoothing: none;
-  -moz-osx-font-smoothing: unset;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   font-variant-ligatures: none;
-  text-rendering: optimizeSpeed;
-  image-rendering: pixelated;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: crisp-edges;
+  text-rendering: optimizeLegibility;
 }
 
 #app {
@@ -64,7 +61,7 @@ body {
 }
 
 .ascii-page {
-  font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Monaco', 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+  font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Consolas', 'Courier New', monospace;
   font-size: 16px;
   line-height: 1.15;
   white-space: pre;
@@ -74,10 +71,10 @@ body {
   margin: 0 auto;
   padding: 0;
   font-variant-ligatures: none;
-  -webkit-font-smoothing: none;
-  -moz-osx-font-smoothing: unset;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   letter-spacing: 0;
-  text-rendering: optimizeSpeed;
+  text-rendering: optimizeLegibility;
   font-weight: 400;
 }
 
@@ -85,9 +82,9 @@ body {
 @media (max-width: 768px) {
   .ascii-page {
     font-size: 14px;
-    -webkit-font-smoothing: none;
-    -moz-osx-font-smoothing: unset;
-    text-rendering: optimizeSpeed;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
     font-weight: 400;
     line-height: 1.2;
   }
@@ -100,8 +97,8 @@ body {
     display: block;
     font-family: 'Courier New', 'Courier', monospace;
     -webkit-text-size-adjust: 100%;
-    -webkit-font-smoothing: none;
-    -moz-osx-font-smoothing: unset;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
@@ -139,6 +136,24 @@ body {
 .ascii-page a:hover {
   color: var(--accent-alt);
   text-decoration: underline;
+}
+
+/* Stars link styling */
+.ascii-page a.stars-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--fg-dim);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.ascii-page a.stars-link:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+}
+
+.ascii-page a.stars-link:hover .dim {
+  color: var(--accent);
 }
 
 /* Cursor blink */
