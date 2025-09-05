@@ -33,7 +33,7 @@ html, body {
 }
 
 body {
-  font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+  font-family: 'IBM Plex Mono', 'Consolas', 'Courier New', monospace;
   background: var(--bg);
   color: var(--fg);
   line-height: 1.2;
@@ -61,9 +61,9 @@ body {
 }
 
 .ascii-page {
-  font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+  font-family: 'IBM Plex Mono', 'Consolas', 'Courier New', monospace;
   font-size: 16px;
-  line-height: 1.15;
+  line-height: 1.18;
   white-space: pre;
   overflow: visible;
   color: var(--fg);
@@ -95,7 +95,7 @@ body {
   
   .ascii-page.mobile {
     display: block;
-    font-family: 'Courier New', 'Courier', monospace;
+    font-family: 'IBM Plex Mono', 'Consolas', 'Courier New', monospace;
     -webkit-text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
